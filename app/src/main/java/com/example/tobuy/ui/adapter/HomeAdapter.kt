@@ -22,32 +22,36 @@ class HomeAdapter(
         val itemEntityInterface: ItemEntityInterface
     ) :
         RecyclerView.ViewHolder(itemBinding.root) {
+
         fun bind(item: ItemEntity) {
+
             itemBinding.titleTextView.text = item.title
+
             if (item.description == null) {
                 itemBinding.descriptionTextView.isGone = true
             } else {
                 itemBinding.descriptionTextView.isVisible = true
                 itemBinding.descriptionTextView.text = item.description
             }
-            itemBinding.deleteImageView.setOnClickListener {
-                itemEntityInterface.onDeleteItemEntity(item)
-            }
+
             itemBinding.priorityTextView.setOnClickListener {
                 itemEntityInterface.onBumpPriority(item)
             }
+
             val colorRes = when (item.priority) {
                 1 -> android.R.color.holo_green_dark
                 2 -> android.R.color.holo_orange_dark
                 3 -> android.R.color.holo_red_dark
                 else -> R.color.purple_700
             }
-            itemBinding.priorityTextView.setBackgroundColor(
-                ContextCompat.getColor(
-                    itemBinding.root.context,
-                    colorRes
-                )
+
+            val color = ContextCompat.getColor(
+                itemBinding.root.context,
+                colorRes
             )
+            itemBinding.priorityTextView.setBackgroundColor(color)
+            itemBinding.root.strokeColor = color
+
         }
     }
 
@@ -62,4 +66,10 @@ class HomeAdapter(
     }
 
     override fun getItemCount() = itemEntityList.size
+
+    fun getNoteAt(adapterPosition: Int): ItemEntity {
+        notifyItemRemoved(adapterPosition)
+        return itemEntityList.removeAt(adapterPosition)
+    }
 }
+
