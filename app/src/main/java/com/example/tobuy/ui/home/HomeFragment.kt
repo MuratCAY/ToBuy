@@ -49,6 +49,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun onBumpPriority(itemEntity: ItemEntity) {
-        // TODO: implement me!
+        val currentPriority = itemEntity.priority
+        var newPriority = currentPriority + 1
+        if (newPriority > 3) {
+            newPriority = 1
+        }
+        val updateItemEntity = itemEntity.copy(priority = newPriority)
+        sharedViewModel.updateItem(updateItemEntity)
     }
 }
