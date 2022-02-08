@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tobuy.R
 import com.example.tobuy.databinding.FragmentHomeBinding
-import com.example.tobuy.model.ItemEntity
+import com.example.tobuy.model.DataItem
 import com.example.tobuy.ui.adapter.HomeAdapter
 import com.example.tobuy.ui.base.BaseFragment
 
@@ -22,7 +22,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             navigateViaNavGraph(R.id.action_homeFragment_to_addItemEntityFragment)
         }
         sharedViewModel.itemEntitiesLiveData.observe(viewLifecycleOwner) { itemEntityList ->
-            adapter = HomeAdapter(itemEntityList as ArrayList<ItemEntity>, this)
+            adapter = HomeAdapter(itemEntityList, this)
             binding.recyclerView.adapter = adapter
 
             val itemTouchHelper =
@@ -36,7 +36,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     }
 
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        sharedViewModel.deleteItem(adapter.getNoteAt(viewHolder.adapterPosition))
+                        sharedViewModel.deleteItem(itemEntityList[viewHolder.adapterPosition])
                     }
                 })
             itemTouchHelper.attachToRecyclerView(binding.recyclerView)
@@ -48,7 +48,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         mainActivity.hideKeyboard(requireView())
     }
 
-    override fun onBumpPriority(itemEntity: ItemEntity) {
+    override fun onBumpPriority(itemEntity: DataItem.ItemEntity) {
         val currentPriority = itemEntity.priority
         var newPriority = currentPriority + 1
         if (newPriority > 3) {

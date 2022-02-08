@@ -8,22 +8,28 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tobuy.R
 import com.example.tobuy.databinding.ItemHomeRecyclerBinding
-import com.example.tobuy.model.ItemEntity
+import com.example.tobuy.databinding.ItemModelHeaderBinding
+import com.example.tobuy.model.DataItem
 import com.example.tobuy.ui.home.ItemEntityInterface
 
 class HomeAdapter(
-    private val itemEntityList: ArrayList<ItemEntity>,
+    private val itemEntityList: List<DataItem>,
     private val itemEntityInterface: ItemEntityInterface
 ) :
-    RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class HomeViewHolder(
-        val itemBinding: ItemHomeRecyclerBinding,
-        val itemEntityInterface: ItemEntityInterface
+    companion object {
+        private const val TYPE_HEADER = 0
+        private const val TYPE_ITEM = 1
+    }
+
+    class HomeViewHolder(
+        private val itemBinding: ItemHomeRecyclerBinding,
+        private val itemEntityInterface: ItemEntityInterface
     ) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-        fun bind(item: ItemEntity) {
+        fun bind(item: DataItem.ItemEntity) {
 
             itemBinding.titleTextView.text = item.title
 
@@ -55,21 +61,47 @@ class HomeAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        val view =
-            ItemHomeRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HomeViewHolder(view, itemEntityInterface)
+    class HeaderViewHolder(private val itemModelHeaderBinding: ItemModelHeaderBinding) :
+        RecyclerView.ViewHolder(itemModelHeaderBinding.root) {
+        fun bind(header: DataItem.Header) {
+            itemModelHeaderBinding.textView.text = header.headerText
+        }
     }
 
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        holder.bind(itemEntityList[position])
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            TYPE_HEADER -> HeaderViewHolder(
+                ItemModelHeaderBinding.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), parent, false
+                )
+            )
+            TYPE_ITEM -> HomeViewHolder(
+                ItemHomeRecyclerBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ), itemEntityInterface
+            )
+            else -> throw IllegalArgumentException("Invalid ViewType")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when(holder){
+            is HomeViewHolder -> holder.bind(itemEntityList[position] as DataItem.ItemEntity)
+            is HeaderViewHolder -> holder.bind(itemEntityList[position] as DataItem.Header)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (itemEntityList[position]) {
+            is DataItem.ItemEntity -> TYPE_ITEM
+            is DataItem.Header -> TYPE_HEADER
+        }
     }
 
     override fun getItemCount() = itemEntityList.size
-
-    fun getNoteAt(adapterPosition: Int): ItemEntity {
-        notifyItemRemoved(adapterPosition)
-        return itemEntityList.removeAt(adapterPosition)
-    }
 }
 

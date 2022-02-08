@@ -1,7 +1,7 @@
 package com.example.tobuy.ui.home
 
-import com.example.tobuy.model.ItemEntity
+import com.example.tobuy.model.DataItem
 
 interface ItemEntityInterface {
-    fun onBumpPriority(itemEntity: ItemEntity)
+    fun onBumpPriority(itemEntity: DataItem.ItemEntity)
 }

@@ -3,10 +3,9 @@ package com.example.tobuy.ui
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.example.tobuy.R
 import com.example.tobuy.databinding.FragmentAddItemEntityBinding
-import com.example.tobuy.model.ItemEntity
+import com.example.tobuy.model.DataItem
 import com.example.tobuy.ui.base.BaseFragment
 import java.util.*
 
@@ -54,7 +53,7 @@ class AddItemEntityFragment :
             R.id.radioButtonHigh -> 3
             else -> 0
         }
-        val itemEntity = ItemEntity(
+        val itemEntity = DataItem.ItemEntity(
             UUID.randomUUID().toString(),
             itemTitle,
             itemDescription,

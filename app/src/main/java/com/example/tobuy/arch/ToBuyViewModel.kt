@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tobuy.database.db.AppDatabase
-import com.example.tobuy.model.ItemEntity
+import com.example.tobuy.model.DataItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -12,7 +12,7 @@ class ToBuyViewModel : ViewModel() {
 
     private lateinit var repository: ToBuyRepository
 
-    val itemEntitiesLiveData = MutableLiveData<List<ItemEntity>>()
+    val itemEntitiesLiveData = MutableLiveData<List<DataItem.ItemEntity>>()
     val transactionCompleteLiveData = MutableLiveData<Boolean>()
 
     fun init(appDatabase: AppDatabase) {
@@ -20,25 +20,25 @@ class ToBuyViewModel : ViewModel() {
 
         viewModelScope.launch {
             repository.getAllItems().collect { items ->
-                itemEntitiesLiveData.postValue(items)
+                itemEntitiesLiveData.postValue(items.sortedByDescending { it.priority })
             }
         }
     }
 
-    fun insertItem(itemEntity: ItemEntity) {
+    fun insertItem(itemEntity: DataItem.ItemEntity) {
         viewModelScope.launch {
             repository.insertItem(itemEntity)
             transactionCompleteLiveData.postValue(true)
         }
     }
 
-    fun deleteItem(itemEntity: ItemEntity) {
+    fun deleteItem(itemEntity: DataItem.ItemEntity) {
         viewModelScope.launch {
             repository.deleteItem(itemEntity)
         }
     }
 
-    fun updateItem(itemEntity: ItemEntity) {
+    fun updateItem(itemEntity: DataItem.ItemEntity) {
         viewModelScope.launch {
             repository.updateItem(itemEntity)
         }
