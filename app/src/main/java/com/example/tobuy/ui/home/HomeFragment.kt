@@ -2,6 +2,7 @@ package com.example.tobuy.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tobuy.R
@@ -17,10 +18,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navigateFabClick()
+        observeItemEntityList()
+    }
 
+    private fun navigateFabClick() {
         binding.fab.setOnClickListener {
-            navigateViaNavGraph(R.id.action_homeFragment_to_addItemEntityFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_addItemEntityFragment)
         }
+    }
+
+    private fun observeItemEntityList() {
         sharedViewModel.itemEntitiesLiveData.observe(viewLifecycleOwner) { itemEntityList ->
             adapter = HomeAdapter(itemEntityList, this)
             binding.recyclerView.adapter = adapter
@@ -56,5 +64,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         val updateItemEntity = itemEntity.copy(priority = newPriority)
         sharedViewModel.updateItem(updateItemEntity)
+    }
+
+    override fun onItemSelected(itemEntity: DataItem.ItemEntity) {
+        val navDirections = HomeFragmentDirections.actionHomeFragmentToAddItemEntityFragment(itemEntity.id)
+        findNavController().navigate(navDirections)
     }
 }

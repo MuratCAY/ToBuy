@@ -4,4 +4,5 @@ import com.example.tobuy.model.DataItem
 
 interface ItemEntityInterface {
     fun onBumpPriority(itemEntity: DataItem.ItemEntity)
+    fun onItemSelected(itemEntity: DataItem.ItemEntity)
 }

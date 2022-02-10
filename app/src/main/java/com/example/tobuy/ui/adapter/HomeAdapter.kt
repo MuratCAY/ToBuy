@@ -24,23 +24,23 @@ class HomeAdapter(
     }
 
     class HomeViewHolder(
-        private val itemBinding: ItemHomeRecyclerBinding,
+        private val itemHomeBinding: ItemHomeRecyclerBinding,
         private val itemEntityInterface: ItemEntityInterface
     ) :
-        RecyclerView.ViewHolder(itemBinding.root) {
+        RecyclerView.ViewHolder(itemHomeBinding.root) {
 
         fun bind(item: DataItem.ItemEntity) {
 
-            itemBinding.titleTextView.text = item.title
+            itemHomeBinding.titleTextView.text = item.title
 
             if (item.description == null) {
-                itemBinding.descriptionTextView.isGone = true
+                itemHomeBinding.descriptionTextView.isGone = true
             } else {
-                itemBinding.descriptionTextView.isVisible = true
-                itemBinding.descriptionTextView.text = item.description
+                itemHomeBinding.descriptionTextView.isVisible = true
+                itemHomeBinding.descriptionTextView.text = item.description
             }
 
-            itemBinding.priorityTextView.setOnClickListener {
+            itemHomeBinding.priorityTextView.setOnClickListener {
                 itemEntityInterface.onBumpPriority(item)
             }
 
@@ -52,19 +52,24 @@ class HomeAdapter(
             }
 
             val color = ContextCompat.getColor(
-                itemBinding.root.context,
+                itemHomeBinding.root.context,
                 colorRes
             )
-            itemBinding.priorityTextView.setBackgroundColor(color)
-            itemBinding.root.strokeColor = color
+            itemHomeBinding.priorityTextView.setBackgroundColor(color)
+            itemHomeBinding.root.strokeColor = color
 
+            itemHomeBinding.root.setOnClickListener {
+                itemEntityInterface.onItemSelected(item)
+            }
         }
     }
 
-    class HeaderViewHolder(private val itemModelHeaderBinding: ItemModelHeaderBinding) :
+    class HeaderViewHolder(
+        private val itemModelHeaderBinding: ItemModelHeaderBinding
+    ) :
         RecyclerView.ViewHolder(itemModelHeaderBinding.root) {
-        fun bind(header: DataItem.Header) {
-            itemModelHeaderBinding.textView.text = header.headerText
+        fun bind(item: DataItem.Header) {
+            itemModelHeaderBinding.textView.text = item.headerText
         }
     }
 
@@ -89,9 +94,9 @@ class HomeAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is HomeViewHolder -> holder.bind(itemEntityList[position] as DataItem.ItemEntity)
+        when (holder) {
             is HeaderViewHolder -> holder.bind(itemEntityList[position] as DataItem.Header)
+            is HomeViewHolder -> holder.bind(itemEntityList[position] as DataItem.ItemEntity)
         }
     }
 
@@ -104,4 +109,20 @@ class HomeAdapter(
 
     override fun getItemCount() = itemEntityList.size
 }
+/*
+var currentPriority = -1
+if (item.priority != currentPriority) {
+    currentPriority = item.priority
+    itemModelHeaderBinding.textView.text = getHeaderTextForPriority(currentPriority)
+}
+ */
+/*    private fun getHeaderTextForPriority(priority: Int): String {
+        return when (priority) {
+            1 -> "Low"
+            2 -> "Medium"
+            else -> "High"
+        }
+    }
+
+ */
 

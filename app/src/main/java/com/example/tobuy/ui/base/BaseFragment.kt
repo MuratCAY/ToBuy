@@ -31,9 +31,9 @@ abstract class BaseFragment<VB : ViewBinding>(
         mainActivity.navController.navigateUp()
     }
 
-    protected fun navigateViaNavGraph(actionId: Int) {
-        mainActivity.navController.navigate(actionId)
-    }
+//    protected fun navigateViaNavGraph(actionId: Int) {
+//        mainActivity.navController.navigate(actionId)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -9,14 +9,32 @@
         android:id="@+id/homeFragment"
         android:name="com.example.tobuy.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
+
         <action
             android:id="@+id/action_homeFragment_to_addItemEntityFragment"
             app:destination="@id/addItemEntityFragment" />
+
     </fragment>
+
     <fragment
         android:id="@+id/addItemEntityFragment"
-        android:name="com.example.tobuy.ui.AddItemEntityFragment"
-        tools:layout="@layout/fragment_add_item_entity"
-        android:label="AddItemEntityFragment" />
+        android:name="com.example.tobuy.ui.add.AddItemEntityFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_add_item_entity">
+
+        <argument
+            android:name="selectedItemEntityId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.tobuy.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
 </navigation>

@@ -9,29 +9,47 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.tobuy.R
 import com.example.tobuy.arch.ToBuyViewModel
 import com.example.tobuy.database.db.AppDatabase
+import com.example.tobuy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val viewModel: ToBuyViewModel by viewModels()
         viewModel.init(AppDatabase.getDatabase(this))
 
+        editNavComponent()
+    }
+
+    private fun editNavComponent() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.profileFragment
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
+        setupWithNavController(binding.bottomNavigation, navController)
+    }
+
+    private fun showBottomNavigation() {
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -44,9 +62,9 @@ class MainActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun showKeyboard() {
+    fun showKeyboard(view: View) {
         val imm: InputMethodManager =
             application.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        imm.showSoftInput(view, 0)
     }
 }
