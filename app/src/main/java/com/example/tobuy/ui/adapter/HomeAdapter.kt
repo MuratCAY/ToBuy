@@ -104,6 +104,9 @@ class HomeAdapter(
         return when (itemEntityList[position]) {
             is DataItem.ItemEntity -> TYPE_ITEM
             is DataItem.Header -> TYPE_HEADER
+            else -> {
+                throw IllegalArgumentException("not")
+            }
         }
     }
 
