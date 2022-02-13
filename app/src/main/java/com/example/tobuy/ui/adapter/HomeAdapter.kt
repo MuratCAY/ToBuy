@@ -11,17 +11,14 @@ import com.example.tobuy.databinding.ItemHomeRecyclerBinding
 import com.example.tobuy.databinding.ItemModelHeaderBinding
 import com.example.tobuy.model.DataItem
 import com.example.tobuy.ui.home.ItemEntityInterface
+import com.example.tobuy.ui.util.Constants.TYPE_HEADER
+import com.example.tobuy.ui.util.Constants.TYPE_ITEM
 
 class HomeAdapter(
     private val itemEntityList: List<DataItem>,
     private val itemEntityInterface: ItemEntityInterface
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    companion object {
-        private const val TYPE_HEADER = 0
-        private const val TYPE_ITEM = 1
-    }
 
     class HomeViewHolder(
         private val itemHomeBinding: ItemHomeRecyclerBinding,
@@ -30,7 +27,6 @@ class HomeAdapter(
         RecyclerView.ViewHolder(itemHomeBinding.root) {
 
         fun bind(item: DataItem.ItemEntity) {
-
             itemHomeBinding.titleTextView.text = item.title
 
             if (item.description == null) {
@@ -61,11 +57,12 @@ class HomeAdapter(
             itemHomeBinding.root.setOnClickListener {
                 itemEntityInterface.onItemSelected(item)
             }
+
         }
     }
 
     class HeaderViewHolder(
-        private val itemModelHeaderBinding: ItemModelHeaderBinding
+        private var itemModelHeaderBinding: ItemModelHeaderBinding
     ) :
         RecyclerView.ViewHolder(itemModelHeaderBinding.root) {
         fun bind(item: DataItem.Header) {
@@ -112,20 +109,5 @@ class HomeAdapter(
 
     override fun getItemCount() = itemEntityList.size
 }
-/*
-var currentPriority = -1
-if (item.priority != currentPriority) {
-    currentPriority = item.priority
-    itemModelHeaderBinding.textView.text = getHeaderTextForPriority(currentPriority)
-}
- */
-/*    private fun getHeaderTextForPriority(priority: Int): String {
-        return when (priority) {
-            1 -> "Low"
-            2 -> "Medium"
-            else -> "High"
-        }
-    }
 
- */
 

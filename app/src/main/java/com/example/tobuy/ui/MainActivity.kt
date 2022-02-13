@@ -6,6 +6,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,12 +34,14 @@ class MainActivity : AppCompatActivity() {
         viewModel.init(AppDatabase.getDatabase(this))
 
         editNavComponent()
+        showAndHideBottomNavigation()
     }
 
     private fun editNavComponent() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeFragment,
@@ -48,8 +52,14 @@ class MainActivity : AppCompatActivity() {
         setupWithNavController(binding.bottomNavigation, navController)
     }
 
-    private fun showBottomNavigation() {
-
+    private fun showAndHideBottomNavigation() {
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (appBarConfiguration.topLevelDestinations.contains(destination.id)) {
+                binding.bottomNavigation.isVisible = true
+            } else {
+                binding.bottomNavigation.isGone = true
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
